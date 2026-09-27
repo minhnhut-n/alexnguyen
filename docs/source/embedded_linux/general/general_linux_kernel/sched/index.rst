@@ -10,4 +10,3 @@ Các feature, Cách triển khai một vài logic trong code
 
    first-hit
    introduction
-   introduction-ver2
