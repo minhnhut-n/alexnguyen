@@ -37,9 +37,6 @@ Introduction — Scheduler và bài toán điều phối
    - **Bức tranh toàn cảnh:** các scheduler class đang có trong mainline.
    - **Bộ máy hỗ trợ:** EAS / Capacity-Aware Scheduling hoạt động kề bên scheduler ra sao.
    - **Khung phân tích module kernel** chuẩn để áp dụng cho mọi subsystem.
-
----
-
 .. rubric:: 1. Nếu hệ thống không có scheduler
 
 Nếu một hệ thống không có scheduler, về cơ bản hệ thống sẽ gặp vấn đề rất lớn.
@@ -97,9 +94,6 @@ Nếu một hệ thống không có scheduler, về cơ bản hệ thống sẽ 
 
 Sau khi một task bị interrupt hoặc bị preempt, bài toán còn lại là:
 **khi nào nó được chạy lại và thứ tự thực thi giữa các task duy trì thế nào?**
-
----
-
 .. rubric:: 2. Khi có nhiều task cùng cần chạy — Execution model
 
 Giả sử có 5 task (A, B, C, D, E) nhưng chỉ có 1 CPU — không thể cho tất cả thực sự chạy cùng một thời điểm. Kernel cần một execution model.
@@ -137,9 +131,6 @@ Giả sử có 5 task (A, B, C, D, E) nhưng chỉ có 1 CPU — không thể ch
                   A, C  B, E  D, F
 
       Nhiều task lúc này có thể thực sự chạy song song.
-
----
-
 .. rubric:: 3. Multithreading, multiprocessing và Synchronization
 
 .. tab-set::
@@ -253,10 +244,11 @@ Giả sử có 5 task (A, B, C, D, E) nhưng chỉ có 1 CPU — không thể ch
       .. note::
          **Synchronization** quyết định *ai được phép truy cập resource*.
          **Scheduler** quyết định *task nào được CPU thực thi và khi nào*.
-
----
-
 .. rubric:: 4. Race condition, deadlock — Scheduler không sửa thay bạn
+
+Vấn đề này **không dược giải quyết trực tiếp** bằng scheduler, **chỉ là gián tiếp** hỗ trợ các task/process 
+chạy mượt mà và dảm bảo rằng các thread của task fork ra đều cùng được xử lý. Tất nhiên các thread
+của process có thể không được chạy đồng thời, nhưng vẫn đảm bảo là nó được đứng dưới một "nhà phân phối".
 
 .. grid:: 1
    :gutter: 3
@@ -275,7 +267,7 @@ Giả sử có 5 task (A, B, C, D, E) nhưng chỉ có 1 CPU — không thể ch
          Thread A: read ──▶ counter++ ──▶ write
          Thread B:    read ──▶ counter++ ──▶ write (đè mất!)
 
-      Scheduler **không tự làm phép toán này thread-safe**.
+      **thread-safe sẽ đảm bảo vấn đề này**.
 
 .. grid:: 1
    :gutter: 3
@@ -284,7 +276,7 @@ Giả sử có 5 task (A, B, C, D, E) nhưng chỉ có 1 CPU — không thể ch
       :class-card: sd-shadow-sm
 
       .. code-block:: text
-         :caption: A giữ lock A chờ B, B giữ lock B chờ A
+         :caption: Lock được giữa xoay vòng (Circular lock/wait)
 
          Thread A: lock(A) ──▶ wait for (B) ──┐
                                               ├──▶ DEADLOCK
@@ -294,16 +286,14 @@ Giả sử có 5 task (A, B, C, D, E) nhưng chỉ có 1 CPU — không thể ch
 
 .. important::
    Scheduler, synchronization và resource management là các vấn đề **liên quan nhưng không đồng nhất**.
-
----
-
 .. rubric:: 5. Scheduler thực sự giải quyết bài toán gì?
 
-Có thể mô tả scheduler bằng một câu hỏi duy nhất:
+Các bải toán như
+- Task nào được chạy
+- Khi nào được chạy
+- Chạy trên CPU nào và trong bao lâu?
 
 .. rst-class:: lead
-
-   Task nào được chạy, khi nào được chạy, chạy trên CPU nào và trong bao lâu?
 
 .. grid:: 1
    :gutter: 3
@@ -372,9 +362,6 @@ Có thể mô tả scheduler bằng một câu hỏi duy nhất:
          Scheduler ────────▶ CPU execution ───────┘
 
       Application dùng được concurrency mà không cần trực tiếp quản lý toàn bộ CPU hardware.
-
----
-
 .. rubric:: 6. Application mô tả concurrency — Kernel biến thành execution
 
 .. grid:: 1
@@ -436,9 +423,6 @@ Có thể mô tả scheduler bằng một câu hỏi duy nhất:
    .. warning::
       Đừng hiểu scheduler tự làm performance tăng “hàng trăm lần”.
       Mức cải thiện phụ thuộc workload, hardware, I/O, sync, MM và policy.
-
----
-
 .. rubric:: 7. Scheduler là một phần của hệ thống lớn hơn
 
 Scheduler không phải toàn bộ OS:
@@ -472,9 +456,6 @@ Scheduler không phải toàn bộ OS:
          Scheduler ──▶ task state / wakeup / blocking / CPU alloc ──▶ MM ──▶ FS / Net / Driver
 
 Các subsystem không hoàn toàn độc lập — performance hệ thống không đến từ scheduler riêng lẻ mà từ sự phối hợp: Scheduling + MM + I/O + Sync + Driver + Hardware + Application behavior.
-
----
-
 .. rubric:: 8. Tuy hai mà một, tuy một mà hai
 
 Các subsystem cần tách ra để dễ phát triển, debug, bảo trì, giảm coupling, dễ thay đổi implementation. Nhưng chúng không thể tách hoàn toàn.
@@ -529,9 +510,6 @@ Các subsystem cần tách ra để dễ phát triển, debug, bảo trì, giả
 
 .. note::
    Cái hay của Linux không chỉ là có scheduler, mà là cách rất nhiều cơ chế được thiết kế thành subsystem tương đối độc lập, mỗi subsystem giải một bài toán riêng, nhưng vẫn phối hợp thành hệ thống thống nhất.
-
----
-
 .. rubric:: 9. Mechanism và Policy — How vs What
 
 Một cách quan trọng để hiểu scheduler là phân biệt Mechanism và Policy:
@@ -545,7 +523,7 @@ Một cách quan trọng để hiểu scheduler là phân biệt Mechanism và P
       Kernel thực hiện việc đó **bằng cách nào**?
 
       * context switch
-      * preemption
+      * preemption (đặt chổ trước)
       * task wakeup
       * runqueue
       * timer
@@ -556,12 +534,12 @@ Một cách quan trọng để hiểu scheduler là phân biệt Mechanism và P
 
       Kernel quyết định **nên làm gì** dựa trên tiêu chí nào?
 
-      * priority
-      * fairness
-      * latency
-      * deadline
-      * CPU affinity
-      * load balancing
+      * priority (thông số cài đặt)
+      * fairness (ts tính toán)
+      * latency (ts tính toán)
+      * deadline (ts tính toán)
+      * CPU affinity (ts cài đặt)
+      * load balancing (ts tinh toán)
 
 .. code-block:: text
    :caption: Scheduler = Mechanism (How) + Policy (What)
@@ -574,9 +552,6 @@ Một cách quan trọng để hiểu scheduler là phân biệt Mechanism và P
           └────┬────┘
                ▼
               CPU
-
----
-
 .. rubric:: 10. Scheduler như bài toán resource allocation
 
 .. grid:: 1 2 2 3
@@ -601,13 +576,27 @@ Một cách quan trọng để hiểu scheduler là phân biệt Mechanism và P
 .. code-block:: text
    :caption: Ba mục tiêu cùng tranh một CPU
 
-       Scheduler
-      ┌────┼────┐
-      ▼    ▼    ▼
-   Latency Throughput Fairness
-      └────┼────┘
-           ▼
-    CPU utilization
+                           ┌───────────────┐
+                           │   Scheduler   │
+                           │ (bộ điều phối)│
+                           └───────┬───────┘
+                                   │
+               ┌───────────────────┼───────────────────┐
+               │                   │                   │
+               ▼                   ▼                   ▼
+        ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+        │   Latency   │     │ Throughput  │     │  Fairness   │
+        │ chờ bao lâu?│     │xong bao nhiêu│     │chia có công │
+        │             │     │   việc?     │     │   bằng?     │
+        └──────┬──────┘     └──────┬──────┘     └──────┬──────┘
+               │                   │                   │
+               └───────────────────┼───────────────────┘
+                                   │
+                                   ▼
+                           ┌───────────────┐
+                           │ CPU utilization│
+                           │ (1 CPU duy nhất)│
+                           └───────────────┘
 
 .. dropdown:: Trade-off không thể tránh
    :color: warning
@@ -617,30 +606,43 @@ Một cách quan trọng để hiểu scheduler là phân biệt Mechanism và P
    .. code-block:: text
       :caption: Được latency thì mất throughput và ngược lại
 
-      Latency
-         ▲
-         │   ★ điểm bạn chọn
-         │  ╱
-         └────────────▶ Throughput
+                 Latency (độ trễ thấp = tốt)
+                    ▲
+                    │  thấp = phản hồi nhanh
+                    │
+                    │        ★ điểm bạn chọn
+                    │      ╱  (vd: desktop / RT
+                    │    ╱    ưu tiên latency)
+                    │  ╱
+                    │╱
+                    └────────────────────────────▶  Throughput
+                                                        (xong nhiều việc)
+
+                 ◀── ưu tiên latency ──│── ưu tiên throughput ──▶
 
    Tương tự với Fairness vs Priority / responsiveness:
 
    .. code-block:: text
       :caption: Công bằng tuyệt đối thì task gấp phải chờ
 
-      Fairness
-         ▲
-         │   ★ điểm bạn chọn
-         │  ╱
-         └────────────▶ Priority / responsiveness
+                 Fairness (chia đều = tốt)
+                    ▲
+                    │  cao = ai cũng có phần
+                    │
+                    │        ★ điểm bạn chọn
+                    │      ╱  (vd: server RT
+                    │    ╱    ưu tiên task gấp)
+                    │  ╱
+                    │╱
+                    └────────────────────────────▶  Priority / responsiveness
+                                                        (task gấp chạy trước)
+
+                 ◀── ưu tiên fairness ──│── ưu tiên task gấp ──▶
 
    Vì vậy scheduling là bài toán resource allocation với nhiều mục tiêu và constraints.
-
----
-
 .. rubric:: 11. Scheduler trong RTOS và GPOS
 
-.. grid:: 1 1 2 2
+.. grid:: 1
    :gutter: 3
 
    .. grid-item-card:: RTOS — Deterministic timing
@@ -697,9 +699,6 @@ Một cách quan trọng để hiểu scheduler là phân biệt Mechanism và P
             scale nhiều CPU
 
 Do đó scheduler của RTOS và GPOS có những mục tiêu và trade-off khác nhau.
-
----
-
 .. rubric:: 12. Những cơ chế bên dưới scheduler
 
 “Scheduler” thực tế là tên gọi chung cho một nhóm cơ chế:
@@ -769,9 +768,6 @@ Do đó scheduler của RTOS và GPOS có những mục tiêu và trade-off khá
 
 .. note::
    Các cơ chế này được tổ chức thành những subsystem / code path khác nhau nhưng phối hợp rất chặt chẽ.
-
----
-
 .. rubric:: 13. Cách nhìn tổng thể — Scheduler trong stack OS
 
 .. grid:: 1 1 2 2
@@ -816,9 +812,6 @@ Do đó scheduler của RTOS và GPOS có những mục tiêu và trade-off khá
 
 .. important::
    Performance của hệ thống không đến từ scheduler riêng lẻ. Nó đến từ sự phối hợp của Scheduling + Memory Management + I/O Management + Synchronization + Drivers + Hardware + Application behavior.
-
----
-
 .. rubric:: 14. Bản đồ các Scheduler trong Linux hiện nay
 
 * **CFS — Completely Fair Scheduler**
@@ -843,9 +836,6 @@ Do đó scheduler của RTOS và GPOS có những mục tiêu và trade-off khá
 
    * `Ubuntu Real-Time — Schedulers explanation <https://ubuntu.com/real-time/docs/explanation/schedulers/>`_
    * `kernel/sched/ source — kernel.org <https://elixir.bootlin.com/linux/latest/source/kernel/sched>`_
-
----
-
 .. rubric:: 15. Cơ chế hỗ trợ bên cạnh Scheduler — CAS / EAS
 
 .. grid:: 1 1 2 2
@@ -869,9 +859,6 @@ Do đó scheduler của RTOS và GPOS có những mục tiêu và trade-off khá
 
 .. important::
    Scheduler trả lời **“task nào chạy kế tiếp”**, còn **CAS/EAS** trả lời **“task đó nên chạy trên CPU nào”**. Hai câu hỏi này luôn đi song song trong code.
-
----
-
 .. rubric:: 16. Kết luận — Hỏi đúng câu hỏi khi nghiên cứu scheduler
 
 .. grid:: 1 1 2 2
@@ -917,9 +904,6 @@ Do đó scheduler của RTOS và GPOS có những mục tiêu và trade-off khá
    * Application = task cần làm gì?
    * Hardware = thực thi instruction như thế nào?
    * Scheduler không trực tiếp giải race condition / deadlock của application, nhưng scheduler + synchronization + resource management tạo ra execution environment để application xử lý concurrency có kiểm soát — từ đó đạt throughput cao hơn, latency thấp hơn, responsiveness tốt hơn.
-
----
-
 .. rubric:: Đọc tiếp ở đâu?
 
 * Quay lại :doc:`index` để xem mục lục chương Scheduler.
