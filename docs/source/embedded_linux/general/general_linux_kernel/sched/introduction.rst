@@ -699,6 +699,7 @@ Một cách quan trọng để hiểu scheduler là phân biệt Mechanism và P
             scale nhiều CPU
 
 Do đó scheduler của RTOS và GPOS có những mục tiêu và trade-off khác nhau.
+
 .. rubric:: 12. Những cơ chế bên dưới scheduler
 
 “Scheduler” thực tế là tên gọi chung cho một nhóm cơ chế:
@@ -861,7 +862,7 @@ Do đó scheduler của RTOS và GPOS có những mục tiêu và trade-off khá
    Scheduler trả lời **“task nào chạy kế tiếp”**, còn **CAS/EAS** trả lời **“task đó nên chạy trên CPU nào”**. Hai câu hỏi này luôn đi song song trong code.
 .. rubric:: 16. Kết luận — Hỏi đúng câu hỏi khi nghiên cứu scheduler
 
-.. grid:: 1 1 2 2
+.. grid:: 1
    :gutter: 3
 
    .. grid-item-card:: Stack đầy đủ của OS
@@ -887,6 +888,9 @@ Do đó scheduler của RTOS và GPOS có những mục tiêu và trade-off khá
                   ▼
                Hardware (thực thi instruction?)
 
+.. grid:: 1
+   :gutter: 3
+   
    .. grid-item-card:: Chuỗi câu hỏi nghiên cứu
       :class-card: sd-shadow-sm
 
