@@ -54,7 +54,7 @@ Linux Kernel Module / Subsystem Study Template
 
 .. rubric:: 1. Overview — Tổng quan module
 
-.. grid:: 1 1 2 2
+.. grid:: 1
    :gutter: 3
 
    .. grid-item-card:: Module Identity
@@ -74,6 +74,9 @@ Linux Kernel Module / Subsystem Study Template
            - *Ví dụ:* ``include/linux/sched.h``, ``include/linux/mm.h``
          * - Kernel version đang nghiên cứu
            - *Ví dụ:* ``v6.6``, ``v6.9-rt``, ``android-14-6.1``
+
+.. grid:: 1
+   :gutter: 3
 
    .. grid-item-card:: Position in Kernel
       :class-card: sd-shadow-sm
