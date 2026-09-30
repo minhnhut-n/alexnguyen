@@ -9,6 +9,7 @@ Dịch vụ hệ thống: systemd, network, docker, ...
    :titlesonly:
 
    linux-shell-book
+   guide-build-services
    logging-service-p1
    logging-service-p2
 
