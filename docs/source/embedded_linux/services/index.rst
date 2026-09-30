@@ -9,6 +9,7 @@ Dịch vụ hệ thống: systemd, network, docker, ...
    :titlesonly:
 
    linux-shell-book
-   logging-system
+   logging-service-p1
+   logging-service-p2
 
 .. include:: ../../_includes/contact_info.rst

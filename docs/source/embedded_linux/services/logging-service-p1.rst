@@ -1,6 +1,6 @@
-===================================================
-High-Performance Logging Architecture and Design
-===================================================
+======================
+Logging service part 1
+======================
 
 .. contents:: Table of Contents
    :depth: 2

@@ -1,3 +1,7 @@
+---
+orphan: true
+---
+
 # Scheduler và bài toán điều phối trong hệ điều hành
 
 Nếu một hệ thống không có scheduler, về cơ bản hệ thống sẽ gặp một số vấn đề rất lớn.
