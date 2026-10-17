@@ -1,8 +1,10 @@
-1. ROS Car — Giải thích chi tiết cấu trúc project autocar_ros
-=============================================================
+ROS Car — Giải thích chi tiết cấu trúc project autocar_ros
+===========================================================
+
+.. _ros-car-label:
 
 .. meta::
-   :description: Giai thich chi tiet cau truc project autocar_ros - ROS 2 Jazzy, Gazebo, RViz
+   :description: Giải thích chi tiết cấu trúc project autocar_ros - ROS 2 Jazzy, Gazebo, RViz
    :keywords: ROS 2, Gazebo, RViz, autocar_ros, Mobile Robot, DiffDrive, Jazzy
 
 .. contents:: **Mục lục chi tiết**
@@ -10,9 +12,8 @@
    :local:
    :backlinks: entry
 
----
-
-.. rubric:: Giới thiệu
+Giới thiệu
+----------
 
 Tài liệu này giải thích chi tiết:
 
@@ -20,10 +21,65 @@ Tài liệu này giải thích chi tiết:
 * Lý do project cần file đó.
 * **Hậu quả / Lỗi hệ thống** nếu file bị thiếu hoặc sai cấu hình.
 
----
+Mục tiêu của tài liệu:
 
-2. Sơ đồ cây hệ thống (tree tổng)
-=================================
+* Mô tả tổng thể về hệ thống xe mô phỏng ROS Car.
+* Phân giải các thành phần chính và trách nhiệm của từng thành phần.
+* Trình tự thực thi, tương thích, phụ thuộc và luồng dữ liệu/sự kiện.
+* Các tham số, lệnh, API và cơ chế quan trọng liên quan.
+* Cách kiểm tra, chẩn đoán và cách ly lỗi.
+* Điều kiện tiên quyết, hạn chế và sai lầm thường gặp.
+
+Content map
+-----------
+
+.. list-table:: Các phần chính của tài liệu
+   :widths: 25 75
+   :header-rows: 1
+
+   * - Phần
+     - Nội dung
+   * - :ref:`big-picture-ros-car`
+     - Tổng quan hệ thống, vai trò của các thành phần chính và luồng hoạt động.
+   * - :ref:`directory-tree-ros-car`
+     - Cấu trúc thư mục workspace và package autocar_ros.
+   * - :ref:`core-components-ros-car`
+     - Các file cốt lõi: URDF, launch, world, bridge, điều khiển console, build.
+   * - :ref:`support-files-ros-car`
+     - Các file hỗ trợ: display.launch, hello_node, RViz, header, test, tài liệu kèm.
+   * - :ref:`troubleshooting-ros-car`
+     - Bảng chẩn đoán lỗi: biểu hiện, nguyên nhân, cách xác minh, xử lý khắc phục.
+   * - :ref:`checklist-ros-car`
+     - Danh sách kiểm tra điều kiện tiên quyết và thứ tự thực thi.
+
+.. _big-picture-ros-car:
+
+Big picture
+-----------
+
+Hệ thống **ROS Car** (project ``autocar_ros``) là một mô phỏng xe di động hai bánh chủ động (Differential Drive) chạy trên ROS 2 Jazzy và Gazebo Harmonic. Các thành phần chính chịu trách nhiệm như sau:
+
+* **``urdf/autocar.urdf.xacro``**: Định hình hình học, khớp, chất lượng quán tính, cảm biến và plugin động cơ của xe.
+* **``launch/sim.launch.py``**: Khởi động toàn bộ hệ thống bằng một lệnh duy nhất (URDF → Gazebo → spawn → bridge → RViz).
+* **``worlds/autocar_world.sdf``**: Mô phỏng môi trường sân, ánh sáng, vật lý và plugin Gazebo.
+* **``config/gz_bridge.yaml``**: Cầu nối topic giữa ROS 2 và Gazebo (cmd_vel, odom, tf).
+* **``src/console_drive.cpp``**: Đọc phím bàn phím và phát lệnh ``/cmd_vel`` để điều khiển xe.
+* **``package.xml`` & ``CMakeLists.txt``**: Khai báo phụ thuộc và quy tắc biên dịch/cài đặt package.
+
+Luồng hoạt động tổng thể khi chạy ``ros2 launch autocar_ros sim.launch.py``::
+
+   sim.launch.py
+   ├─> autocar.urdf.xacro --xacro--> robot_description ─> robot_state_publisher ─> /tf_static
+   ├─> autocar_world.sdf ─────────────────────────────────> Gazebo (Sân mô phỏng + Vật lý)
+   ├─> create (-topic robot_description) ─────────────────> Spawn xe vào sân
+   ├─> gz_bridge.yaml ────────────────────────────────────> Cầu nối cmd_vel/odom/tf (ROS ↔ GZ)
+   ├─> autocar.rviz ──────────────────────────────────────> RViz2 vẽ mô hình xe & Odometry
+   └─> console_drive.cpp --/cmd_vel--> DiffDrive plugin ──> Bánh quay, xe di chuyển ─> /odom
+
+.. _directory-tree-ros-car:
+
+Cấu trúc thư mục
+----------------
 
 Cấu trúc thư mục hiện tại của workspace:
 
@@ -58,25 +114,23 @@ Cấu trúc thư mục hiện tại của workspace:
        ├── HD_CHAY_XE.md               # [Phụ] Hướng dẫn vận hành nhanh
        └── CAC_BUOC_TU_PROJECT_TRONG.md# [Phụ] Nhật ký tái hiện từ 0
 
-.. rubric:: Luồng vận hành khi chạy ``ros2 launch autocar_ros sim.launch.py``
-
 .. code-block:: text
 
    sim.launch.py
-    ├─> autocar.urdf.xacro --xacro--> robot_description ─> robot_state_publisher ─> /tf_static
-    ├─> autocar_world.sdf ─────────────────────────────────> Gazebo (Sân mô phỏng + Vật lý)
-    ├─> create (-topic robot_description) ─────────────────> Spawn xe vào sân
-    ├─> gz_bridge.yaml ────────────────────────────────────> Cầu nối cmd_vel/odom/tf (ROS ↔ GZ)
-    ├─> autocar.rviz ──────────────────────────────────────> RViz2 vẽ mô hình xe & Odometry
-    └─> console_drive.cpp --/cmd_vel--> DiffDrive plugin ──> Bánh quay, xe di chuyển ─> /odom
+   ├─> autocar.urdf.xacro --xacro--> robot_description ─> robot_state_publisher ─> /tf_static
+   ├─> autocar_world.sdf ─────────────────────────────────> Gazebo (Sân mô phỏng + Vật lý)
+   ├─> create (-topic robot_description) ─────────────────> Spawn xe vào sân
+   ├─> gz_bridge.yaml ────────────────────────────────────> Cầu nối cmd_vel/odom/tf (ROS ↔ GZ)
+   ├─> autocar.rviz ──────────────────────────────────────> RViz2 vẽ mô hình xe & Odometry
+   └─> console_drive.cpp --/cmd_vel--> DiffDrive plugin ──> Bánh quay, xe di chuyển ─> /odom
 
----
+.. _core-components-ros-car:
 
-3. Nhóm A: Các file quan trọng (cốt lõi)
-========================================
+Các thành phần cốt lõi (Nhóm A)
+-------------------------------
 
 A1. `urdf/autocar.urdf.xacro` — HÌNH HÀI & CẤU TRÚC KHỚP XE
------------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. important::
 
@@ -116,7 +170,9 @@ A1. `urdf/autocar.urdf.xacro` — HÌNH HÀI & CẤU TRÚC KHỚP XE
   Plugin điều khiển vi sai (Differential Drive). Nhận lệnh từ topic ``cmd_vel``, tính toán quy đổi ra tốc độ góc từng bánh dựa trên ``track`` + ``wheel_radius``, sau đó xuất tọa độ phản hồi ra topic ``odom``.
 
 A2. `launch/sim.launch.py` — NÚT KHỞI ĐỘNG TOÀN HỆ THỐNG
---------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. _sim-launch-label:
 
 Giúp tự động hóa khởi tạo toàn bộ tiến trình chỉ bằng **một câu lệnh duy nhất**.
 
@@ -142,7 +198,9 @@ Giúp tự động hóa khởi tạo toàn bộ tiến trình chỉ bằng **m�
      - Khai phóng màn hình quan sát đồ họa với cấu hình file ``autocar.rviz``.
 
 A3. `worlds/autocar_world.sdf` — MÔ TRƯỜNG SÂN MÔ PHỎNG (GAZEBO WORLD)
-----------------------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. _autocar-world-label:
 
 .. warning::
 
@@ -160,7 +218,9 @@ A3. `worlds/autocar_world.sdf` — MÔ TRƯỜNG SÂN MÔ PHỎNG (GAZEBO WORLD)
 * **Bản đồ:** Sàn xám diện tích :math:`60\times60\text{m}`, đường nhựa kích thước :math:`14\times8\text{m}` có vạch kẻ vàng, kèm 4 cọc tiêu màu cam làm mốc định vị.
 
 A4. `config/gz_bridge.yaml` — CẦU NỐI DỮ LIỆU ROS ↔ GAZEBO
-----------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. _gz-bridge-label:
 
 File đóng vai trò là "Thông dịch viên" giữa ROS 2 và Gazebo.
 
@@ -175,7 +235,9 @@ Cấu hình bao gồm 3 luồng giao tiếp chính:
    Đã áp dụng chuẩn ROS 2 Jazzy: Khai báo cặp khóa ``ros_topic_name`` và ``gz_topic_name`` minh bạch để tránh xung đột dữ liệu.
 
 A5. `src/console_drive.cpp` — BỘ ĐIỀU KHIỂN TAY LÁI CONSOLE
------------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. _console-drive-label:
 
 Chương trình C++ đọc bàn phím ở chế độ **termios raw** (nhận phím tức thì không cần nhấn Enter).
 
@@ -190,7 +252,9 @@ Chương trình C++ đọc bàn phím ở chế độ **termios raw** (nhận ph
 * **Kiến trúc:** Chạy Timer chu kỳ :math:`100\text{ms}` để duy trì phát tin nhắn ``geometry_msgs/msg/Twist`` liên tục lên topic ``/cmd_vel``. Sử dụng luồng riêng (Separate Thread) để vòng lặp timer không bị gián đoạn khi chờ phím.
 
 A6. `package.xml` & `CMakeLists.txt` — BỘ HỒ SƠ & QUY TRÌNH BIÊN DỊCH
----------------------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. _build-files-label:
 
 `package.xml`
    Khai báo thông tin package, người phát triển và các gói phụ thuộc:
@@ -205,10 +269,11 @@ A6. `package.xml` & `CMakeLists.txt` — BỘ HỒ SƠ & QUY TRÌNH BIÊN DỊCH
 
       Nếu quên khai báo `install()` cho các thư mục ``launch/``, ``config/``, ``urdf/``, ``worlds/``, ``rviz/`` vào không gian ``share/``, hệ thống Launch sẽ không thể tìm thấy tài nguyên khi chạy!
 
----
 
-4. Nhóm B: Các file hỗ trợ & phụ tùng
-=====================================
+.. _support-files-ros-car:
+
+Các file hỗ trợ & phụ tùng (Nhóm B)
+-----------------------------------
 
 .. list-table::
    :widths: 30 70
@@ -237,9 +302,93 @@ A6. `package.xml` & `CMakeLists.txt` — BỘ HỒ SƠ & QUY TRÌNH BIÊN DỊCH
    * - ``.gitignore`` / ``LICENSE``
      - Chặn các file tạm/artefacts của colcon và khai báo bản quyền mã nguồn mở MIT.
 
----
 
-.. rubric:: Tài liệu tham khảo
+.. _troubleshooting-ros-car:
+
+Chẩn đoán và xử lý lỗi
+----------------------
+
+Bảng dưới đây liệt kê các lỗi thường gặp, nguyên nhân có thể, cách xác minh và hành động khắc phục.
+
+.. list-table:: Bảng chẩn đoán lỗi
+   :widths: 20 25 25 30
+   :header-rows: 1
+
+   * - Biểu hiện
+     - Nguyên nhân có thể
+     - Cách xác minh
+     - Hành động khắc phục
+   * - Gazebo crash hoặc treo ở node ``create``
+     - Sai phiên bản SDF hoặc thiếu file world
+     - Kiểm tra phiên bản SDF (phải là 1.11 cho Gazebo Harmonic / ROS 2 Jazzy) và file ``autocar_world.sdf`` tồn tại
+     - Cập nhật file world theo chuẩn SDF 1.11
+   * - Bánh xe trật, lún đất hoặc mô phỏng văng ra ngoài
+     - Tham số ``origin`` sai trong URDF/xacro
+     - Xem lại các thông số ``origin`` trong ``autocar.urdf.xacro``
+     - Sửa lại tọa độ origin cho chính xác
+   * - Xe không di chuyển khi nhấn phím điều khiển
+     - Cầu bridge không kết nối topic ``cmd_vel``
+     - Kiểm tra ``gz_bridge.yaml`` và node ``parameter_bridge`` đang chạy
+     - Khai báo lại cặp ``ros_topic_name`` / ``gz_topic_name`` trong bridge
+   * - RViz không hiển thị mô hình xe
+     - Thiếu cài đặt resource ``share/`` hoặc sai file RViz
+     - Kiểm tra ``CMakeLists.txt`` đã ``install()`` thư mục ``rviz/``
+     - Thêm lệnh ``install()`` cho ``rviz/`` và build lại
+   * - Launch không tìm thấy tài nguyên (urdf, world, config...)
+     - Quên ``install()`` vào không gian ``share/``
+     - Kiểm tra ``CMakeLists.txt`` có khai báo ``install(DIRECTORY ... DESTINATION share)``
+     - Bổ sung ``install()`` cho các thư mục cần thiết
+
+.. _checklist-ros-car:
+
+Danh sách kiểm tra
+------------------
+
+Danh sách kiểm tra theo thứ tự để xác minh điều kiện tiên quyết trước khi kết luận hệ thống lỗi hoặc chuyển sang gỡ lỗi phức tạp:
+
+1. [ ] Cài đặt ROS 2 Jazzy và Gazebo Harmonic đúng phiên bản.
+2. [ ] Package ``autocar_ros`` đã build bằng ``colcon build`` thành công.
+3. [ ] Các thư mục ``launch/``, ``config/``, ``urdf/``, ``worlds/``, ``rviz/`` đã được ``install()`` vào ``share/``.
+4. [ ] File ``autocar.urdf.xacro`` có thông số ``origin`` chính xác, không bị sai lệch tọa độ Z.
+5. [ ] File ``gz_bridge.yaml`` khai báo đầy đủ cặp ``ros_topic_name`` và ``gz_topic_name``.
+6. [ ] Chạy lệnh ``ros2 launch autocar_ros sim.launch.py`` thành công, Gazebo hiển thị sân và xe.
+7. [ ] RViz2 mở được và hiển thị mô hình xe cùng Odometry với Fixed Frame là ``odom``.
+8. [ ] Nhấn phím ``W``/``S``/``A``/``D`` trên console_drive, xe di chuyển và topic ``/cmd_vel`` có dữ liệu.
+9. [ ] Kiểm tra topic ``/odom`` và ``/tf`` có dữ liệu cập nhật khi xe di chuyển.
+
+.. _visual-summary-ros-car:
+
+Tóm tắt trực quan
+-----------------
+
+Luồng dữ liệu chính của hệ thống ROS Car::
+
+   Bàn phím (console_drive)
+         │
+         ▼
+   Topic /cmd_vel (geometry_msgs/Twist)
+         │
+         ▼
+   Cầu nối gz_bridge (ROS 2 ↔ Gazebo)
+         │
+         ▼
+   Plugin DiffDrive trong Gazebo
+         │
+         ▼
+   Bánh xe quay → Xe di chuyển → Odometry (odom, tf)
+         │
+         ▼
+   RViz2 hiển thị mô hình xe & Odometry
+
+**Các điểm cần nhớ:**
+
+* File ``urdf/autocar.urdf.xacro`` là trọng tâm — sai thông số ``origin`` làm hỏng toàn bộ mô phỏng.
+* Cầu nối ``gz_bridge.yaml`` phải đồng bộ topic giữa ROS 2 và Gazebo.
+* ``CMakeLists.txt`` phải ``install()`` tất cả thư mục tài nguyên vào ``share/``.
+* Khi lỗi xảy ra, hãy kiểm tra từ kiểm tra đơn giản (phiên bản, file tồn tại) sang kiểm tra phức tạp (node, topic, plugin).
+
+Tài liệu tham khảo
+------------------
 
 - `ROS 2 Jazzy documentation <https://docs.ros.org/en/jazzy/>`_
 - `Gazebo Harmonic documentation <https://gazebosim.org/docs>`_
