@@ -1,47 +1,103 @@
-.. _atomic-operations:
+2 Atomic Operations
+===================
 
-====================
-2. Atomic Operations
-====================
+.. _atomic-ops-label:
 
-.. rst-class:: lead
+.. meta::
+   :description: Hướng dẫn chi tiết về phép toán nguyên tử (atomic) trong C11/stdatomic.h, áp dụng cho dự án Build Logger - ring buffer, lock-free, memory ordering, CAS, fetch_*
+   :keywords: C11, stdatomic.h, atomic, lock-free, memory_order, CAS, fetch_add, ring buffer, Build Logger, đa luồng
 
-   **Atomic operation** (phép toán nguyên tử) là thao tác **không thể chia nhỏ**:
-   nó *hoặc thực hiện trọn vẹn, hoặc không thực hiện chút nào* — không có trạng
-   thái "làm nửa vời". Trong C, cả họ atomic này được chuẩn hoá bởi **C11** qua
-   header ``<stdatomic.h>``, cho phép viết code **đa luồng không cần khóa
-   (lock-free)** một cách *chuẩn C*, không phụ thuộc compiler.
+.. contents:: **Mục lục chi tiết**
+   :depth: 2
+   :local:
+   :backlinks: entry
 
-.. grid:: 1 2 2 4
-   :gutter: 3
+Giới thiệu
+----------
 
-   .. grid-item-card:: 🧩 Nguyên tử
-      :text-align: center
-      :class-card: sd-shadow-sm
+**Atomic operation** (phép toán nguyên tử) là thao tác **không thể chia nhỏ**:
+nó *hoặc thực hiện trọn vẹn, hoặc không thực hiện chút nào* — không có trạng
+thái "làm nửa vờ". Trong C, cả họ atomic này được chuẩn hoá bởi **C11** qua
+header ``<stdatomic.h>``, cho phép viết code **đa luồng không cần khóa
+(lock-free)** một cách *chuẩn C*, không phụ thuộc compiler.
 
-      Không bị *torn read/write*: giá trị luôn nhất quán, không "xen ở giữa".
+Mục tiêu của tài liệu:
 
-   .. grid-item-card:: 🧠 Thứ tự bộ nhớ
-      :text-align: center
-      :class-card: sd-shadow-sm
+* Giải thích vấn đề race condition khi thao tác biến thường đa luồng.
+* Trình bày các kiểu dữ liệu atomic và cách khởi tạo trong C11.
+* Phân tích 6 cấp độ ``memory_order`` và cặp release–acquire.
+* Chi tiết các phép toán atomic: load/store, exchange, RMW, CAS, atomic_flag, fence.
+* Cung cấp bảng tra toàn bộ hàm atomic và best practices.
+* Hướng dẫn chẩn đoán lỗi và danh sách kiểm tra khi áp dụng atomic.
 
-      6 cấp ``memory_order`` để điều tiến *nhìn thấy* dữ liệu giữa các luồng.
+Content map
+-----------
 
-   .. grid-item-card:: 🔧 Đa dạng phép toán
-      :text-align: center
-      :class-card: sd-shadow-sm
+.. list-table:: Các phần chính của tài liệu
+   :widths: 25 75
+   :header-rows: 1
 
-      load/store, exchange, CAS, fetch-add/or/and/xor, flag, fence.
+   * - Phần
+     - Nội dung
+   * - :ref:`big-picture-atomic-ops`
+     - Tổng quan về atomic, vấn đề race condition và giải pháp lock-free.
+   * - :ref:`atomic-types-init`
+     - Kiểu dữ liệu atomic (_Atomic, typedef) và cách khởi tạo.
+   * - :ref:`atomic-memory-order`
+     - 6 cấp độ memory_order và cặp release–acquire.
+   * - :ref:`atomic-basic-ops`
+     - Các phép toán cơ bản: load, store, exchange.
+   * - :ref:`atomic-rmw`
+     - Read–Modify–Write: fetch_* và CAS strong/weak.
+   * - :ref:`atomic-flag-fence`
+     - atomic_flag, thread_fence, signal_fence, is_lock_free.
+   * - :ref:`atomic-reference-table`
+     - Bảng tra toàn bộ hàm atomic trong C.
+   * - :ref:`atomic-troubleshooting`
+     - Bảng chẩn đoán lỗi và cách khắc phục.
+   * - :ref:`atomic-checklist`
+     - Danh sách kiểm tra trước khi áp dụng atomic.
 
-   .. grid-item-card:: ⚡ Không cần mutex
-      :text-align: center
-      :class-card: sd-shadow-sm
+.. _big-picture-atomic-ops:
 
-      Nhiều hot-path chạy **lock-free**, tránh block và deadlock.
+Big picture
+-----------
 
-----
+Hệ thống đa luồng trong dự án **Build Logger** sử dụng atomic để synchronise
+dữ liệu giữa producer và consumer mà không dùng mutex. Luồng hoạt động chính:
 
-.. rubric:: 1. Vấn đề: vì sao ``x++`` không an toàn?
+.. code-block:: text
+
+   Producer (ghi log)
+         │
+         ▼
+   Ghi dữ liệu vào ring buffer
+         │
+         ▼
+   atomic_store(&committed, 1, memory_order_release)  ← publish
+         │
+         ▼
+   Consumer (đọc log)
+         │
+         ▼
+   atomic_load(&committed, memory_order_acquire)      ← nhận
+         │
+         ▼
+   Đọc dữ liệu an toàn (happens-before)
+
+Các thành phần liên quan:
+
+* ``<stdatomic.h>`` — header chuẩn C11 chứa toàn bộ họ atomic.
+* ``_Atomic(T)`` / ``atomic_int``, ``atomic_bool``, ``atomic_flag``… — kiểu biến atomic.
+* ``memory_order_relaxed / consume / acquire / release / acq_rel / seq_cst`` — 6 cấp độ thứ tự bộ nhớ.
+* ``atomic_load``, ``atomic_store``, ``atomic_exchange`` — thao tác cơ bản.
+* ``atomic_fetch_add``, ``atomic_fetch_sub``, ``atomic_fetch_or/and/xor`` — RMW trả giá trị cũ.
+* ``atomic_compare_exchange_strong/weak`` — CAS, trái tim của lock-free.
+* ``atomic_flag`` — kiểu atomic duy nhất bảo đảm lock-free mọi nền tảng.
+* ``atomic_thread_fence``, ``atomic_signal_fence`` — rào chắn thứ tự.
+
+1. Vấn đề: vì sao ``x++`` không an toàn?
+----------------------------------------
 
 Với biến thường, ``counter++`` trông như *một* lệnh nhưng thực ra là **ba bước**
 tại tầng CPU: **đọc → cộng → ghi**. Nếu hai luồng cùng thực hiện, chúng có thể
@@ -59,7 +115,7 @@ tại tầng CPU: **đọc → cộng → ghi**. Nếu hai luồng cùng thực 
                        ▼
               GHI ĐÈ LẪN NHAU → counter = 6   (lẽ ra phải là 7!)
                        ▲
-                  ❌ mất 1 lần tăng (lost update)
+                  (lost update) — mất 1 lần tăng
 
 .. grid:: 1 1 2 2
    :gutter: 3
@@ -86,9 +142,11 @@ tại tầng CPU: **đọc → cộng → ghi**. Nếu hai luồng cùng thực 
    * :ref:`socket-commu-guide` và :ref:`ring-buffer-impl` — nơi atomic được *vận dụng* thực tế.
 
 
-----
 
-.. rubric:: 2. Kiểu dữ liệu atomic & khởi tạo
+.. _atomic-types-init:
+
+Kiểu dữ liệu atomic & khởi tạo
+------------------------------
 
 C cung cấp **hai cách** khai báo biến atomic:
 
@@ -156,9 +214,11 @@ C cung cấp **hai cách** khai báo biến atomic:
 
 
 
-----
 
-.. rubric:: 3. Thứ tự bộ nhớ (memory ordering)
+.. _atomic-memory-order:
+
+Thứ tự bộ nhớ (memory ordering)
+-------------------------------
 
 Mỗi phép toán atomic đều nhận một tham số **memory order** quyết định: (1) thao
 tác này *ràng buộc thứ tự* với các thao tác khác thế nào, và (2) khi nào dữ liệu
@@ -246,9 +306,11 @@ tác này *ràng buộc thứ tự* với các thao tác khác thế nào, và (
 
 
 
-----
 
-.. rubric:: 4. Các phép toán atomic cơ bản
+.. _atomic-basic-ops:
+
+Các phép toán atomic cơ bản
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Mỗi thao tác đều có **hai biến thể**: bản ngắn (mặc định ``seq_cst``) và bản
 ``_explicit`` (tự chọn memory order).
@@ -290,9 +352,11 @@ Mỗi thao tác đều có **hai biến thể**: bản ngắn (mặc định ``s
    kết quả ``atomic_load()`` hay gán ``&atomic_load(&x)`` — nó là một *bản sao*
    theo giá trị.
 
-----
 
-.. rubric:: 5. Read–Modify–Write (RMW)
+.. _atomic-rmw:
+
+Read–Modify–Write (RMW)
+^^^^^^^^^^^^^^^^^^^^^^^
 
 Đây là nhóm thao tác **đọc–sửa–ghi trong một bước nguyên tử**. Tất cả đều *trả
 về giá trị trước khi sửa*.
@@ -332,9 +396,11 @@ về giá trị trước khi sửa*.
 
 
 
-----
 
-.. rubric:: 6. Compare-And-Swap (CAS) — trái tim của lock-free
+.. _atomic-cas:
+
+Compare-And-Swap (CAS) — trái tim của lock-free
+----------------------------------------------------------
 
 CAS là phép toán **quyết định** của mọi cấu trúc lock-free. Nó hỏi: *"giá trị
 hiện tại có đúng bằng giá trị tôi đọc lúc trước không? Nếu đúng → ghi giá trị
@@ -397,9 +463,11 @@ mới; nếu không → báo cho tôi biết để thử lại."*
 
 
 
-----
 
-.. rubric:: 7. ``atomic_flag`` — kiểu atomic đặc biệt
+.. _atomic-flag-fence:
+
+atomic_flag — kiểu atomic đặc biệt
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 ``atomic_flag`` là kiểu atomic **đơn giản nhất** và là kiểu **duy nhất được
 bảo đảm lock-free** trên mọi nền tảng. Nó chỉ có hai trạng thái: bật/tắt — lý
@@ -423,9 +491,11 @@ tưởng để chế spinlock tối thiản.
    Đây là lý do các kiểu atomic khác (``atomic_bool``) *không* bảo đảm lock-free,
    còn ``atomic_flag`` thì có.
 
-----
 
-.. rubric:: 8. Fence & truy vấn
+.. _atomic-fence:
+
+Fence & truy vấn
+""""""""""""""""
 
 .. grid:: 1 1 2 2
    :gutter: 3
@@ -471,7 +541,11 @@ tưởng để chế spinlock tối thiản.
       ``atomic_llong`` (64-bit) có thể rơi vào *mutex nội bộ* → chậm. Kiểm tra
       nếu bạn nhắm tới hiệu năng thời gian thực.
 
-.. rubric:: 9. Bảng tra toàn bộ atomic trong C
+
+.. _atomic-reference-table:
+
+Bảng tra toàn bộ atomic trong C
+----------------------------------------------------------
 
 .. list-table:: Tổng hợp các thao tác (mỗi cái có bản ngắn + ``_explicit``)
    :header-rows: 1
@@ -520,7 +594,11 @@ tưởng để chế spinlock tối thiản.
      - Kiểm tra có lock-free không
      - ``bool``
 
-.. rubric:: 10. Best practices & cái bẫy
+
+.. _atomic-best-practices:
+
+Best practices & cái bẫy
+--------------------------------------------------------
 
 .. grid:: 1 1 2 2
    :gutter: 3
@@ -551,31 +629,97 @@ tưởng để chế spinlock tối thiản.
       ``load(acquire)``. Một phía thiếu là mất đồng bộ. Chi tiết vận dụng ở
       :ref:`ring-buffer-impl`.
 
-.. rubric:: Tóm tắt
 
-.. list-table::
+.. _atomic-troubleshooting:
+
+Chẩn đoán và xử lý lỗi
+----------------------
+
+Bảng dưới đây liệt kê các lỗi thường gặp khi sử dụng atomic, nguyên nhân, cách xác minh và xử lý khắc phục.
+
+.. list-table:: Bảng chẩn đoán lỗi atomic
+   :widths: 20 25 25 30
    :header-rows: 1
-   :widths: 22 78
 
-   * - Chủ đề
-     - Điểm cần nhớ
-   * - Vấn đề
-     - ``x++`` = đọc+cộng+ghi → **không** nguyên tử, có race
-   * - Giải pháp
-     - Dùng ``<stdatomic.h>`` (C11) — chuẩn, không phụ thuộc compiler
-   * - Kiểu
-     - ``_Atomic(T)`` hoặc typedef ``atomic_int``, ``atomic_bool``, ``atomic_flag``…
-   * - Thứ tự
-     - 6 mức: relaxed → consume → acquire/release → acq_rel → seq_cst
-   * - Cặp then chốt
-     - **release** (publish) ↔ **acquire** (nhận) tạo *happens-before*
-   * - RMW
-     - exchange, CAS strong/weak, fetch_add/sub/or/and/xor — đều trả giá trị **cũ**
-   * - Vận dụng
-     - Ring buffer dùng CAS(weak) trên head/tail + release/acquire cho cờ committed
+   * - Biểu hiện
+     - Nguyên nhân có thể
+     - Cách xác minh
+     - Hành động khắc phục
+   * - Race condition, biến bị ghi đè (lost update)
+     - Dùng biến thường thay vì atomic, hoặc thiếu memory order
+     - Kiểm tra xem biến chia sẻ có khai báo ``_Atomic`` hay không
+     - Thay bằng ``atomic_int`` / ``_Atomic(int)`` và dùng ``atomic_fetch_add``
+   * - Consumer đọc dữ liệu cũ dù flag đã bật
+     - Thiếu cặp release–acquire giữa producer và consumer
+     - Kiểm tra producer dùng ``store(release)``, consumer dùng ``load(acquire)``
+     - Bổ sung ``memory_order_release`` ở store, ``memory_order_acquire`` ở load
+   * - CAS luôn trả false, không thể giữ chỗ
+     - Tham số ``expected`` bị ghi đè khi CAS thất bại, không đọc lại giá trị mới
+     - In ra giá trị ``expected`` sau mỗi lần CAS thất bại
+     - Dùng ``expected`` trực tiếp trong vòng lặp `do…while`, đọc lại `obj` nếu cần
+   * - Hiệu năng kém trên ARM/Power
+     - Dùng ``seq_cst`` mặc định, quá mạnh cho các trường hợp đơn giản
+     - Đo profiling, kiểm tra atomic_is_lock_free
+     - Tinh chỉnh xuống ``relaxed`` / ``acquire`` / ``release`` khi có thể
+   * - Không lock-free trên nền tảng nhất định
+     - Kiểu atomic lớn (ví dụ ``atomic_llong`` 64-bit trên ARM 32-bit) rơi vào mutex nội bộ
+     - Gọi ``atomic_is_lock_free()`` tại runtime
+     - Tránh kiểu lớn trên nền tảng kém hỗ trợ, hoặc dùng `atomic_flag` thay thế
 
-.. seealso::
-   * :ref:`ring-buffer-impl` — CAS và release/acquire được *dùng thật* trong ring buffer.
-   * :ref:`potential-faults` — đánh đổi khi nhiều producer dùng chung atomic.
+.. _atomic-checklist:
+
+Danh sách kiểm tra
+------------------
+
+Danh sách kiểm tra theo thứ tự trước khi áp dụng atomic vào code production:
+
+1. [ ] Xác định biến nào được chia sẻ giữa nhiều luồng/ngắt.
+2. [ ] Khai báo biến chia sẻ bằng ``_Atomic(T)`` hoặc typedef ``atomic_*``.
+3. [ ] Khởi tạo giá trị ban đầu (``= 0`` hoặc ``atomic_init()``).
+4. [ ] Chọn memory order phù hợp: ``seq_cst`` mặc định, tinh chỉnh khi cần.
+5. [ ] Đảm bảo cặp release–acquire khớp giữa producer và consumer.
+6. [ ] Dùng `atomic_fetch_add/sub` thay cho `counter++` trong đa luồng.
+7. [ ] Dùng CAS (strong/weak) cho "kiểm tra + chiếm" nguyên tử.
+8. [ ] Kiểm tra `atomic_is_lock_free()` nếu nhắm tới hiệu năng thời gian thực.
+9. [ ] Tránh `volatile` làm thay thế cho atomic — nó không đảm bảo nguyên tử.
+
+.. _atomic-visual-summary:
+
+Tóm tắt trực quan
+-----------------
+
+Luồng dữ liệu atomic giữa producer và consumer::
+
+   Producer                                    Consumer
+   │                                               │
+   ▼                                               ▼
+   Ghi dữ liệu vào bộ nhớ                          Kiểm tra flag
+   │                                               │
+   ▼                                               │
+   atomic_store(&flag, 1, release) ───────────────▶│
+   (publish, hoàn tất mọi ghi trước)               │
+   │                                               ▼
+   │                                      atomic_load(&flag, acquire)
+   │                                      (nhận, nhìn thấy mọi ghi)
+   │                                               │
+   ▼                                               ▼
+   Hoàn tất                                      Đọc dữ liệu an toàn
+
+**Các điểm cần nhớ:**
+
+* ``x++`` không phải nguyên tử — phải dùng ``atomic_fetch_add``.
+* Cặp **release–acquire** tạo quan hệ happens-before, là nền tảng truyền dữ liệu an toàn.
+* ``fetch_*`` trả về giá trị **trước** khi sửa, không phải sau.
+* CAS strong/weak đều trả `false` và ghi đè `expected` khi thất bại.
+* ``volatile`` ≠ atomic — đa luồng phải dùng ``_Atomic``.
+
+Tài liệu tham khảo
+------------------
+
+- `C11 Standard (ISO/IEC 9899:2011) <https://open-std.org/JTC1/SC22/WG14/www/docs/n1570/>`_
+- `cppreference — <stdatomic.h> <https://en.cppreference.com/w/c/atomic>`_
+- `Linux kernel atomic documentation <https://www.kernel.org/doc/html/latest/coreapi/atomic_ops.html>`_
+- :ref:`ring-buffer-impl` — CAS và release/acquire được dùng thật trong ring buffer.
+- :ref:`potential-faults` — đánh đổi khi nhiều producer dùng chung atomic.
 
 

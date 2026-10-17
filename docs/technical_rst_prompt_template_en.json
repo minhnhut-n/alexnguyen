@@ -32,6 +32,7 @@
     "Include a local table of contents using '.. contents::' and an appropriate ':depth:'.",
     "Use appropriate directives such as '.. rubric::', '.. code-block::', '.. list-table::', '.. note::', '.. tip::', '.. warning::', and '.. admonition::'.",
     "Use sphinx-design directives such as '.. grid::' and '.. grid-item-card::' only when appropriate and when the project supports the extension. Otherwise, prefer basic RST or clearly state the extension requirement.",
+    "Do not layout too much grid-item card into a table, it not enough space"
     "Indent directives, lists, tables, and code blocks correctly according to RST syntax.",
     "Do not use Markdown headings, Markdown tables, or fenced Markdown code blocks in the generated document.",
     "Do not wrap the entire RST document in a code fence unless explicitly requested.",
