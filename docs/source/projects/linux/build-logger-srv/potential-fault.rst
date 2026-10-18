@@ -182,7 +182,7 @@ từ chối ``fopen(..., "a")`` khi:
 
 .. rubric:: Giải pháp
 
-.. grid:: 1 1 2 2
+.. grid:: 1
    :gutter: 3
 
    .. grid-item-card:: 📂 Đổi sang vị trí có quyền

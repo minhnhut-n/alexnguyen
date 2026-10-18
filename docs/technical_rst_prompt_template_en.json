@@ -31,9 +31,10 @@
     "Create unique RST labels using the form '.. _label-name:'.",
     "Include a local table of contents using '.. contents::' and an appropriate ':depth:'.",
     "Use appropriate directives such as '.. rubric::', '.. code-block::', '.. list-table::', '.. note::', '.. tip::', '.. warning::', and '.. admonition::'.",
-    "Use sphinx-design directives such as '.. grid::' and '.. grid-item-card::' only when appropriate and when the project supports the extension. Otherwise, prefer basic RST or clearly state the extension requirement.",
-    "Do not layout too much grid-item card into a table, it not enough space"
-    "Indent directives, lists, tables, and code blocks correctly according to RST syntax.",
+    "Use sphinx-design directives such as '.. grid::' and '.. grid-item-card::' when appropriate (e.g., using ':gutter: 3' and ':class-card: sd-shadow-sm').",
+    "STRICT INDENTATION FOR NESTED DIRECTIVES: When placing a '.. code-block::' or lists inside a '.. grid-item-card::', ensure the content and code block are indented correctly relative to the card directive (typically 3 to 6 spaces deeper), matching valid reStructuredText syntax.",
+    "NO NON-BREAKING SPACES: Never use non-breaking space characters (Unicode U+00A0) in the generated RST output. Use only standard ASCII spaces (U+0020) for indentation to prevent Sphinx IndentationErrors.",
+    "Do not layout too much grid-item card into a table, it not enough space.",
     "Do not use Markdown headings, Markdown tables, or fenced Markdown code blocks in the generated document.",
     "Do not wrap the entire RST document in a code fence unless explicitly requested.",
     "Do not leave template placeholders or editorial notes in the final document unless the user explicitly requests a reusable template."

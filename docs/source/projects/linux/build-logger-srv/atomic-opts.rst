@@ -1,7 +1,7 @@
+.. _atomic-ops-label:
+
 2 Atomic Operations
 ===================
-
-.. _atomic-ops-label:
 
 .. meta::
    :description: Hướng dẫn chi tiết về phép toán nguyên tử (atomic) trong C11/stdatomic.h, áp dụng cho dự án Build Logger - ring buffer, lock-free, memory ordering, CAS, fetch_*

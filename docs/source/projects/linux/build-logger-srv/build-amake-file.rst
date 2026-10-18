@@ -11,7 +11,7 @@ Viết Makefile để biên dịch chương trình
    Bài viết này lột xác **Makefile thật** của dự án *Build Logger* để bạn vừa hiểu
    **cú pháp**, vừa nắm **ý nghĩa từng ký tự** và **cấu trúc tổng thể** của nó.
 
-.. grid:: 1 2 2 4
+.. grid:: 1 2 2 2
    :gutter: 3
 
    .. grid-item-card:: 🧾 Biến (Variables)
@@ -157,7 +157,7 @@ nào **không cần** (bỏ qua) — gọi là **incremental build**.
 
 .. important::
    ``-std=gnu11`` là **bắt buộc** ở daemon, vì ``ring_buffer.h`` dùng
-   ``<stdatomic.h>`` — tính năng **C11** (xem :ref:`atomic-operations`). Thiếu cờ
+   ``<stdatomic.h>`` — tính năng **C11** (xem :ref:`atomic-ops-label`). Thiếu cờ
    này, compiler sẽ báo lỗi không nhận diện được ``_Atomic``.
 
 
@@ -184,7 +184,7 @@ Một **rule** (quy tắc) trong Makefile có dạng tổng quát:
    ký tự **TAB** (``\t``), *không* phải dấu cách. Dùng space → make báo lỗi
    khó hiểu *"missing separator"*. Đây là lỗi gặp nhất khi mới học.
 
-.. grid:: 1 1 2 2
+.. grid:: 1
    :gutter: 3
 
    .. grid-item-card:: 🎯 Rule liên kết (link)
@@ -477,7 +477,7 @@ Makefile nhưng cú pháp khác. Đối chiếu nhanh:
 
 .. seealso::
    * :ref:`architecture` — cây thư mục chứa các Makefile/CMakeLists này.
-   * :ref:`atomic-operations` — lý do daemon bắt buộc cờ ``-std=gnu11``.
+   * :ref:`atomic-ops-label` — lý do daemon bắt buộc cờ ``-std=gnu11``.
    * :ref:`ring-buffer-impl` — ``ring_buffer.c`` được build cùng daemon.
 
 
