@@ -50,6 +50,11 @@ về hệ thống nhúng, robot, và Linux.
       :link-type: doc
       :class-card: sd-shadow-md
 
+   .. grid-item-card:: 🎼 Music
+      :link: music/index
+      :link-type: doc
+      :class-card: sd-shadow-md
+
       Tất cả các project được phân loại theo từng mục.
 
 .. toctree::
@@ -64,5 +69,6 @@ về hệ thống nhúng, robot, và Linux.
    embedded_mcu/index
    programming/index
    projects/index
+   music/index
 
 .. include:: _includes/contact_info.rst

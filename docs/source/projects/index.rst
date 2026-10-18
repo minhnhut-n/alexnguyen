@@ -43,5 +43,3 @@ Danh sách tất cả các project, được phân loại theo từng mục.
    robot/index
    linux/index
    mcu/index
-
-.. include:: ../_includes/contact_info.rst
