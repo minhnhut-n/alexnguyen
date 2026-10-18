@@ -92,14 +92,17 @@ Phân loại khái niệm và thành phần
 Hệ thống nhạc lý và kỹ thuật guitar được chia làm 3 nhóm chức năng chính:
 
 1. **Thành phần thể chất & Động lực học (Mechanical & Dynamics)**
+
    - *Phách (Beat):* Đơn vị thời gian cơ bản. Nhịp chân xuống/lên hoàn chỉnh tương ứng với 1 phách.
    - *Hợp âm bấm mở (Open Chords) & Hợp âm chặn (Barre Chords):* Các thế bấm đóng vai trò tạo nền âm thanh.
 
 2. **Thành phần Cấu trúc Nhạc lý (Structural Music Theory)**
+
    - *Bậc âm (Scale Degrees):* Đánh số từ 1 đến 7 trong thang âm.
    - *Hợp âm Diatonic:* Hệ thống các hợp âm sinh ra tự nhiên từ một thang âm chủ (Key).
 
 3. **Thành phần Kỹ thuật Biểu diễn (Performance Techniques)**
+
    - *Quạt chả (Strumming):* Điều tiết tiết tấu (Xuống - Lên - Chặt).
    - *Rải âm (Arpeggio):* Tách nốt nốt Bass và các dây treble (Bass - 3 - 2 - 1 - 2 - 3).
 
