@@ -285,7 +285,7 @@ daemon": đảm bảo các **executable file** có quyền phù hợp ngay từ 
 
       Atomic giúp *từng thao tác* an toàn, nhưng **chuỗi** thao tác (kiểm tra →
       chiếm) vẫn có thể có lỗ hổng. Phải phân tích cả *quy trình*, không chỉ từng
-      dòng. Xem lại :ref:`atomic-operations`.
+      dòng. Xem lại :ref:`atomic-ops-label`.
 
    .. grid-item-card:: 📁 Quyền là chuyện của môi trường
       :class-card: sd-shadow-sm
@@ -295,7 +295,7 @@ daemon": đảm bảo các **executable file** có quyền phù hợp ngay từ 
 
 .. seealso::
    * :ref:`ring-buffer-impl` — cấu trúc dữ liệu mà Lỗi #1/#2 xảy ra bên trong.
-   * :ref:`atomic-operations` — nền tảng CAS/atomic để hiểu nguyên nhân gốc.
+   * :ref:`atomic-ops-label` — nền tảng CAS/atomic để hiểu nguyên nhân gốc.
    * :ref:`socket-commu-guide` — đường đi của dữ liệu trước khi vào ring buffer.
 
 

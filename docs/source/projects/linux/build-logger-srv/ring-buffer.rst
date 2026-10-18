@@ -330,7 +330,7 @@ Hai điều kiện biên được kiểm tra *trước* khi thực hiện CAS:
 .. rubric:: 7. CAS & Thứ tự bộ nhớ (memory ordering)
 
 Đây là *trái tim* giúp ring buffer chạy đúng mà **không cần khóa**. Chi tiết sâu
-hơn được trình bày riêng ở mục :ref:`atomic-opts <atomic-operations>`, ở đây ta
+hơn được trình bày riêng ở mục :ref:`atomic-ops-label`, ở đây ta
 chỉ tập trung vào **vai trò của từng memory order** trong ngữ cảnh buffer.
 
 .. grid:: 1 1 2 2
@@ -457,7 +457,7 @@ sau — và có hướng khắc phục ở mục :ref:`potential-faults <potenti
      - ``pop`` trả ``-1`` → consumer chờ, nhả CPU
 
 .. seealso::
-   * :ref:`atomic-opts <atomic-operations>` — đi sâu vào CAS và memory ordering.
+   * :ref:`atomic-opts <atomic-ops-label>` — đi sâu vào CAS và memory ordering.
    * :ref:`potential-faults <potential-faults>` — các lỗi tiềm ẩn và hướng khắc phục.
 
 
