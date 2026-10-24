@@ -12,7 +12,7 @@ Các nội dung có thể bao gồm: tìm kiếm, sắp xếp, quy hoạch độ
    :glob:
 
    complexity
-   searching
+   BFS-DFS
    sorting
    recursion
    divide_conquer
