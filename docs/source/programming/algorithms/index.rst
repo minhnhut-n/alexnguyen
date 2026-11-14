@@ -11,14 +11,14 @@ Các nội dung có thể bao gồm: tìm kiếm, sắp xếp, quy hoạch độ
    :titlesonly:
    :glob:
 
-   complexity
-   BFS-DFS
-   sorting
-   recursion
-   divide_conquer
-   dynamic_programming
-   greedy
-   graph
-   bipartite
-   backtracking
-   string
+   complexity/index
+   BFS-DFS/index
+   sorting/index
+   recursion/index
+   divide_conquer/index
+   dynamic_programming/index
+   greedy/index
+   graph/index
+   bipartite/index
+   backtracking/index
+   string/index
