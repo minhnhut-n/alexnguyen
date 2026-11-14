@@ -1,8 +1,8 @@
-LỘ TRÌNH LEETCODE 30 NGÀY
---------------------------------
+Introduction Challenge
+======================
 
-Mục tiêu
---------
+.. rubric:: Mục tiêu
+
 
 Trong 30 ngày, xây dựng nền tảng thuật toán vững chắc, rèn luyện tư duy
 giải quyết vấn đề và hình thành khả năng tự lựa chọn thuật toán phù hợp
@@ -10,12 +10,12 @@ khi gặp một bài toán mới.
 
 Trọng tâm không phải là giải thật nhiều bài, mà là hiểu:
 
-* Nguyên lý hoạt động của thuật toán.
-* Vì sao thuật toán phù hợp với một dạng bài toán.
-* Cách tự cài đặt thuật toán từ đầu.
-* Cách phân tích độ phức tạp thời gian và bộ nhớ.
+* **Nguyên lý hoạt động** của thuật toán.
+* Vì sao thuật toán **phù hợp** với một dạng bài toán.
+* Cách **tự cài đặt thuật toán** từ đầu.
+* Cách phân tích **độ phức tạp** thời gian và **bộ nhớ**.
 * Cách nhận diện những mẫu bài toán quen thuộc.
-* Cách cải thiện lời giải ban đầu.
+* Cách **cải thiện lời giải** ban đầu.
 
 **Thời lượng:** 30 ngày, khoảng 2 đến 3 giờ mỗi ngày.
 
@@ -23,20 +23,20 @@ Trọng tâm không phải là giải thật nhiều bài, mà là hiểu:
 
 **Ngôn ngữ:** C++17.
 
-Kết quả kỳ vọng
----------------
+.. rubric:: Kết quả kỳ vọng
+
 
 Sau 30 ngày, mục tiêu là:
 
-* Hiểu các kỹ thuật thuật toán nền tảng.
+* Hiểu các **kỹ thuật thuật toán** nền tảng.
 * Tự cài đặt được những thuật toán cốt lõi.
-* Giải độc lập phần lớn bài Easy thuộc các chủ đề đã học.
-* Giải được phần lớn bài Medium có dạng quen thuộc.
-* Hiểu hướng tiếp cận của một số bài Hard.
+* **Giải độc lập** phần lớn bài Easy thuộc các chủ đề đã học.
+* **Giải được** phần lớn bài Medium có dạng quen thuộc.
+* Hiểu **hướng tiếp cận** của một số bài Hard.
 * Có quy trình phân tích bài toán rõ ràng trước khi viết mã.
 
-Tổng quan lộ trình
-------------------
+.. rubric:: Tổng quan lộ trình
+
 
 .. list-table::
    :header-rows: 1
@@ -58,20 +58,20 @@ Tổng quan lộ trình
      - Ngày 22 đến 30
      - Thuật toán nâng cao và luyện tập tổng hợp
 
-GIAI ĐOẠN 1 - NỀN TẢNG, BFS VÀ FLOOD FILL
------------------------------------------------
+.. rubric:: GIAI ĐOẠN 1 - NỀN TẢNG, BFS VÀ FLOOD FILL
 
-Thời gian: Ngày 1 đến ngày 7
-----------------------------------
 
-Mục tiêu
---------
+.. rubric:: Thời gian: Ngày 1 đến ngày 7
+
+
+.. rubric:: Mục tiêu
+
 
 Nắm được cách phân tích độ phức tạp, biểu diễn đồ thị, duyệt BFS và xử
 lý các bài toán trên ma trận.
 
-Ngày 1 - Phân tích độ phức tạp
-------------------------------------
+.. rubric:: Ngày 1 - Phân tích độ phức tạp
+
 
 **Nội dung**
 
@@ -86,13 +86,13 @@ Ngày 1 - Phân tích độ phức tạp
 * `Two Sum #1 <https://leetcode.com/problems/two-sum/>`_
 * `Contains Duplicate #217 <https://leetcode.com/problems/contains-duplicate/>`_
 
-Ngày 2 - Bài toán cơ bản
-----------------------------
+.. rubric:: Ngày 2 - Bài toán cơ bản
+
 
 **Nội dung**
 
 * Phân tích đề bài.
-* Xử lý mảng và chuỗi.
+* **Xử lý mảng và chuỗi**.
 * Bảng băm.
 * Nhận diện các mẫu bài toán đơn giản.
 
@@ -101,23 +101,34 @@ Ngày 2 - Bài toán cơ bản
 * `Valid Anagram #242 <https://leetcode.com/problems/valid-anagram/>`_
 * `Best Time to Buy and Sell Stock #121 <https://leetcode.com/problems/best-time-to-buy-and-sell-stock/>`_
 
-Ngày 3 - Brute Force
---------------------
+.. rubric:: Ngày 3 - Brute Force
+
+
+Tại sao lại giải brute force trong khi ta biết nó không tối ưu và rất mất thời gian trong 
+việc xác định các trường hợp?
+- BF để viết hàm chuẩn, đơn giản và chắc đúng trong nhiều trường hợp
+- Stress test với thuật toán
+- Hiểu rõ bức tranh toàn cảnh của hệ thống
+- Tránh analysis paralysis (bế tắc)
 
 **Nội dung**
 
 * Tìm kiếm vét cạn.
 * Liệt kê các khả năng.
-* Xác định điểm nghẽn tính toán.
+* Xác định **điểm nghẽn tính toán**.
 * Tối ưu lời giải ban đầu.
 
 **Bài tập**
+Brute force:
+- [e] #1, #728
+- [m] #78, #46
+- [h] #79, #56
 
 * `Maximum Subarray #53 <https://leetcode.com/problems/maximum-subarray/>`_
 * `3Sum #15 <https://leetcode.com/problems/3sum/>`_
 
-Ngày 4 - Breadth First Search (BFS)
------------------------------------------
+.. rubric:: Ngày 4 - Breadth First Search (BFS)
+
 
 **Nội dung**
 
@@ -131,8 +142,8 @@ Ngày 4 - Breadth First Search (BFS)
 
 * `Binary Tree Level Order Traversal #102 <https://leetcode.com/problems/binary-tree-level-order-traversal/>`_
 
-Ngày 5 - Flood Fill
--------------------
+.. rubric:: Ngày 5 - Flood Fill
+
 
 **Nội dung**
 
@@ -147,8 +158,8 @@ Ngày 5 - Flood Fill
 * `Flood Fill #733 <https://leetcode.com/problems/flood-fill/>`_
 * `Number of Islands #200 <https://leetcode.com/problems/number-of-islands/>`_
 
-Ngày 6 - BFS trên ma trận
-----------------------------
+.. rubric:: Ngày 6 - BFS trên ma trận
+
 
 **Nội dung**
 
@@ -162,8 +173,8 @@ Ngày 6 - BFS trên ma trận
 * `Rotting Oranges #994 <https://leetcode.com/problems/rotting-oranges/>`_
 * `01 Matrix #542 <https://leetcode.com/problems/01-matrix/>`_
 
-Ngày 7 - Ôn tập và đánh giá
---------------------------------
+.. rubric:: Ngày 7 - Ôn tập và đánh giá
+
 
 **Bài tập**
 
@@ -178,20 +189,20 @@ Ngày 7 - Ôn tập và đánh giá
 * [ ] Phân tích được độ phức tạp O(V + E).
 * [ ] Phân tích được độ phức tạp O(M x N) khi duyệt ma trận.
 
-GIAI ĐOẠN 2 - BRUTE FORCE VÀ BACKTRACKING
-----------------------------------------------
+.. rubric:: GIAI ĐOẠN 2 - BRUTE FORCE VÀ BACKTRACKING
 
-Thời gian: Ngày 8 đến ngày 14
------------------------------------
 
-Mục tiêu
---------
+.. rubric:: Thời gian: Ngày 8 đến ngày 14
+
+
+.. rubric:: Mục tiêu
+
 
 Hiểu đệ quy, cây tìm kiếm, quản lý trạng thái, quay lui và kỹ thuật cắt
 tỉa nhánh tìm kiếm.
 
-Ngày 8 - Nền tảng đệ quy
----------------------------
+.. rubric:: Ngày 8 - Nền tảng đệ quy
+
 
 **Nội dung**
 
@@ -206,8 +217,8 @@ Ngày 8 - Nền tảng đệ quy
 * `Reverse Linked List #206 <https://leetcode.com/problems/reverse-linked-list/>`_
 * `Maximum Depth of Binary Tree #104 <https://leetcode.com/problems/maximum-depth-of-binary-tree/>`_
 
-Ngày 9 - Tập con
-----------------
+.. rubric:: Ngày 9 - Tập con
+
 
 **Nội dung**
 
@@ -219,8 +230,8 @@ Ngày 9 - Tập con
 
 * `Subsets #78 <https://leetcode.com/problems/subsets/>`_
 
-Ngày 10 - Tổ hợp
-----------------
+.. rubric:: Ngày 10 - Tổ hợp
+
 
 **Nội dung**
 
@@ -232,8 +243,8 @@ Ngày 10 - Tổ hợp
 
 * `Combinations #77 <https://leetcode.com/problems/combinations/>`_
 
-Ngày 11 - Hoán vị
------------------
+.. rubric:: Ngày 11 - Hoán vị
+
 
 **Nội dung**
 
@@ -246,8 +257,8 @@ Ngày 11 - Hoán vị
 
 * `Permutations #46 <https://leetcode.com/problems/permutations/>`_
 
-Ngày 12 - Backtracking
-----------------------
+.. rubric:: Ngày 12 - Backtracking
+
 
 **Nội dung**
 
@@ -259,8 +270,8 @@ Ngày 12 - Backtracking
 
 * `Combination Sum #39 <https://leetcode.com/problems/combination-sum/>`_
 
-Ngày 13 - Pruning
------------------
+.. rubric:: Ngày 13 - Pruning
+
 
 **Nội dung**
 
@@ -274,8 +285,8 @@ Ngày 13 - Pruning
 * `Word Search #79 <https://leetcode.com/problems/word-search/>`_
 * `Subsets II #90 <https://leetcode.com/problems/subsets-ii/>`_
 
-Ngày 14 - Ôn tập và đánh giá
-----------------------------------
+.. rubric:: Ngày 14 - Ôn tập và đánh giá
+
 
 **Bài tập**
 
@@ -292,14 +303,14 @@ Ngày 14 - Ôn tập và đánh giá
 * [ ] Áp dụng được kỹ thuật cắt tỉa.
 * [ ] Phân tích được độ phức tạp của thuật toán đệ quy.
 
-GIAI ĐOẠN 3 - DYNAMIC PROGRAMMING
---------------------------------------
+.. rubric:: GIAI ĐOẠN 3 - DYNAMIC PROGRAMMING
 
-Thời gian: Ngày 15 đến ngày 21
-------------------------------------
 
-Mục tiêu
---------
+.. rubric:: Thời gian: Ngày 15 đến ngày 21
+
+
+.. rubric:: Mục tiêu
+
 
 Rèn luyện khả năng nhận diện bài toán con, định nghĩa trạng thái DP,
 xây dựng công thức chuyển trạng thái và tối ưu bộ nhớ.
@@ -308,8 +319,8 @@ xây dựng công thức chuyển trạng thái và tối ưu bộ nhớ.
 Dynamic Programming thường không nằm ở việc viết mã, mà nằm ở việc xác
 định đúng trạng thái và công thức chuyển trạng thái.
 
-Ngày 15 - Giới thiệu Dynamic Programming
-----------------------------------------------
+.. rubric:: Ngày 15 - Giới thiệu Dynamic Programming
+
 
 **Nội dung**
 
@@ -323,8 +334,8 @@ Ngày 15 - Giới thiệu Dynamic Programming
 
 * `Climbing Stairs #70 <https://leetcode.com/problems/climbing-stairs/>`_
 
-Ngày 16 - Quy hoạch động một chiều
-----------------------------------------
+.. rubric:: Ngày 16 - Quy hoạch động một chiều
+
 
 **Nội dung**
 
@@ -338,8 +349,8 @@ Ngày 16 - Quy hoạch động một chiều
 * `House Robber #198 <https://leetcode.com/problems/house-robber/>`_
 * `House Robber II #213 <https://leetcode.com/problems/house-robber-ii/>`_
 
-Ngày 17 - Tối ưu quy hoạch động
---------------------------------------
+.. rubric:: Ngày 17 - Tối ưu quy hoạch động
+
 
 **Nội dung**
 
@@ -353,8 +364,8 @@ Ngày 17 - Tối ưu quy hoạch động
 * `Maximum Subarray #53 <https://leetcode.com/problems/maximum-subarray/>`_
 * `Min Cost Climbing Stairs #746 <https://leetcode.com/problems/min-cost-climbing-stairs/>`_
 
-Ngày 18 - Quy hoạch động trên ma trận
--------------------------------------------
+.. rubric:: Ngày 18 - Quy hoạch động trên ma trận
+
 
 **Nội dung**
 
@@ -368,8 +379,8 @@ Ngày 18 - Quy hoạch động trên ma trận
 * `Unique Paths #62 <https://leetcode.com/problems/unique-paths/>`_
 * `Minimum Path Sum #64 <https://leetcode.com/problems/minimum-path-sum/>`_
 
-Ngày 19 - Knapsack
-------------------
+.. rubric:: Ngày 19 - Knapsack
+
 
 **Nội dung**
 
@@ -382,8 +393,8 @@ Ngày 19 - Knapsack
 
 * `Coin Change #322 <https://leetcode.com/problems/coin-change/>`_
 
-Ngày 20 - Quy hoạch động trên dãy
----------------------------------------
+.. rubric:: Ngày 20 - Quy hoạch động trên dãy
+
 
 **Nội dung**
 
@@ -396,8 +407,8 @@ Ngày 20 - Quy hoạch động trên dãy
 
 * `Longest Increasing Subsequence #300 <https://leetcode.com/problems/longest-increasing-subsequence/>`_
 
-Ngày 21 - Quy hoạch động hai chiều
-----------------------------------------
+.. rubric:: Ngày 21 - Quy hoạch động hai chiều
+
 
 **Nội dung**
 
@@ -422,14 +433,14 @@ Ngày 21 - Quy hoạch động hai chiều
 * [ ] Hiểu các biến thể của Knapsack.
 * [ ] Biết cách tối ưu bộ nhớ.
 
-GIAI ĐOẠN 4 - THUẬT TOÁN NÂNG CAO VÀ LUYỆN TẬP
---------------------------------------------------------
+.. rubric:: GIAI ĐOẠN 4 - THUẬT TOÁN NÂNG CAO VÀ LUYỆN TẬP
 
-Thời gian: Ngày 22 đến ngày 30
-------------------------------------
 
-Mục tiêu
---------
+.. rubric:: Thời gian: Ngày 22 đến ngày 30
+
+
+.. rubric:: Mục tiêu
+
 
 Tìm hiểu các thuật toán đồ thị nâng cao, bài toán ghép cặp, kỹ thuật tối
 ưu hóa và kết hợp những kiến thức đã học.
@@ -437,8 +448,8 @@ Tìm hiểu các thuật toán đồ thị nâng cao, bài toán ghép cặp, k�
 Một số thuật toán trong giai đoạn này phù hợp với bài tập chuyên biệt
 hơn là các bài LeetCode thông thường.
 
-Ngày 22 - Ôn tập đồ thị
----------------------------
+.. rubric:: Ngày 22 - Ôn tập đồ thị
+
 
 **Nội dung**
 
@@ -454,8 +465,8 @@ Ngày 22 - Ôn tập đồ thị
 * Cài đặt lại DFS.
 * Phân tích độ phức tạp khi duyệt đồ thị.
 
-Ngày 23 - Maximum Flow
-----------------------
+.. rubric:: Ngày 23 - Maximum Flow
+
 
 **Nội dung**
 
@@ -472,8 +483,8 @@ Ngày 23 - Maximum Flow
 * Cài đặt Edmonds-Karp.
 * Tự giải một ví dụ Maximum Flow nhỏ.
 
-Ngày 24 - Bipartite Matching
-----------------------------------
+.. rubric:: Ngày 24 - Bipartite Matching
+
 
 **Nội dung**
 
@@ -491,8 +502,8 @@ Ngày 24 - Bipartite Matching
 
 * `Maximum Number of Accepted Invitations #1820 <https://leetcode.com/problems/maximum-number-of-accepted-invitations/>`_
 
-Ngày 25 - Optimal Pair Matching
--------------------------------------
+.. rubric:: Ngày 25 - Optimal Pair Matching
+
 
 **Nội dung**
 
@@ -508,8 +519,8 @@ Ngày 25 - Optimal Pair Matching
 * Cài đặt thuật toán Hungarian.
 * Tự giải một ví dụ phân công nhỏ.
 
-Ngày 26 - Linear Programming
-----------------------------------
+.. rubric:: Ngày 26 - Linear Programming
+
 
 **Nội dung**
 
@@ -525,8 +536,8 @@ Ngày 26 - Linear Programming
 * Xác định các biến quyết định.
 * Xây dựng hàm mục tiêu và các ràng buộc.
 
-Ngày 27 - Simplex Method
-----------------------------
+.. rubric:: Ngày 27 - Simplex Method
+
 
 **Nội dung**
 
@@ -541,8 +552,8 @@ Ngày 27 - Simplex Method
 * Tự giải một ví dụ Simplex nhỏ.
 * Hiểu cách phép xoay trục cải thiện giá trị hàm mục tiêu.
 
-Ngày 28 - Bài tập tổng hợp
---------------------------------
+.. rubric:: Ngày 28 - Bài tập tổng hợp
+
 
 **Nội dung**
 
@@ -556,8 +567,8 @@ Ngày 28 - Bài tập tổng hợp
 * Giải bài toán mà không biết trước thuật toán cần sử dụng.
 * Giải thích vì sao lựa chọn thuật toán đó.
 
-Ngày 29 - Hard Drills
----------------------
+.. rubric:: Ngày 29 - Hard Drills
+
 
 **Mục tiêu**
 
@@ -572,8 +583,8 @@ Ngày 29 - Hard Drills
 * Phân tích các lần giải sai.
 * Cài đặt lại những lời giải chưa đúng.
 
-Ngày 30 - Đánh giá cuối chương trình
-------------------------------------------
+.. rubric:: Ngày 30 - Đánh giá cuối chương trình
+
 
 **Mục tiêu**
 
@@ -594,11 +605,11 @@ Ngày 30 - Đánh giá cuối chương trình
 * [ ] Giải thích nguyên lý Maximum Flow và Matching.
 * [ ] Hiểu mục đích của Linear Programming và Simplex.
 
-PHƯƠNG PHÁP HỌC MỖI NGÀY
-----------------------------
+.. rubric:: PHƯƠNG PHÁP HỌC MỖI NGÀY
 
-Quy trình học
--------------
+
+.. rubric:: Quy trình học
+
 
 Mỗi buổi học nên tuân theo một quy trình nhất quán.
 
@@ -625,8 +636,8 @@ Mỗi buổi học nên tuân theo một quy trình nhất quán.
      - 10 phút
      - Tự trình bày lại thuật toán mà không xem tài liệu.
 
-Quy trình phân tích bài toán
-----------------------------------
+.. rubric:: Quy trình phân tích bài toán
+
 
 Trước khi viết mã, hãy trả lời năm câu hỏi sau:
 
@@ -639,14 +650,14 @@ Trước khi viết mã, hãy trả lời năm câu hỏi sau:
 Mục tiêu là hình thành tư duy thuật toán, thay vì ghi nhớ lời giải
 của từng bài LeetCode.
 
-XÂY DỰNG ALGORITHM NOTEBOOK
----------------------------------
+.. rubric:: XÂY DỰNG ALGORITHM NOTEBOOK
+
 
 Nên tạo một kho mã nguồn riêng để lưu trữ kiến thức, mã cài đặt và
 tiến độ học tập.
 
-Cấu trúc thư mục đề xuất
-----------------------------
+.. rubric:: Cấu trúc thư mục đề xuất
+
 
 .. code-block:: text
 
@@ -682,8 +693,8 @@ Cấu trúc thư mục đề xuất
    |
    +-- progress.md
 
-Tiêu chí hoàn thành một thuật toán
-----------------------------------------
+.. rubric:: Tiêu chí hoàn thành một thuật toán
+
 
 Không đánh dấu một thuật toán là đã hoàn thành chỉ vì lời giải LeetCode
 đã được chấp nhận.
@@ -707,11 +718,11 @@ Không đánh dấu một thuật toán là đã hoàn thành chỉ vì lời gi
    * - Ghi nhớ
      - Có thể tự cài đặt lại sau 2 đến 3 ngày.
 
-THEO DÕI TIẾN ĐỘ
-----------------
+.. rubric:: THEO DÕI TIẾN ĐỘ
 
-Giai đoạn 1 - Nền tảng
-----------------------
+
+.. rubric:: Giai đoạn 1 - Nền tảng
+
 
 * [ ] Ngày 1
 * [ ] Ngày 2
@@ -721,8 +732,8 @@ Giai đoạn 1 - Nền tảng
 * [ ] Ngày 6
 * [ ] Ngày 7
 
-Giai đoạn 2 - Backtracking
---------------------------------
+.. rubric:: Giai đoạn 2 - Backtracking
+
 
 * [ ] Ngày 8
 * [ ] Ngày 9
@@ -732,8 +743,8 @@ Giai đoạn 2 - Backtracking
 * [ ] Ngày 13
 * [ ] Ngày 14
 
-Giai đoạn 3 - Dynamic Programming
----------------------------------------
+.. rubric:: Giai đoạn 3 - Dynamic Programming
+
 
 * [ ] Ngày 15
 * [ ] Ngày 16
@@ -743,8 +754,8 @@ Giai đoạn 3 - Dynamic Programming
 * [ ] Ngày 20
 * [ ] Ngày 21
 
-Giai đoạn 4 - Thuật toán nâng cao
----------------------------------------
+.. rubric:: Giai đoạn 4 - Thuật toán nâng cao
+
 
 * [ ] Ngày 22
 * [ ] Ngày 23
@@ -756,8 +767,8 @@ Giai đoạn 4 - Thuật toán nâng cao
 * [ ] Ngày 29
 * [ ] Ngày 30
 
-TÀI LIỆU THAM KHẢO
-------------------
+.. rubric:: TÀI LIỆU THAM KHẢO
+
 
 * `Topcoder - How To Find a Solution <https://www.topcoder.com/thrive/articles/How%20To%20Find%20a%20Solution>`_
 * `LeetCode 75 <https://leetcode.com/studyplan/leetcode-75/>`_
@@ -765,8 +776,8 @@ TÀI LIỆU THAM KHẢO
 * `CP-Algorithms <https://cp-algorithms.com/>`_
 * `USACO Guide <https://usaco.guide/>`_
 
-MỤC TIÊU CUỐI CÙNG
-------------------
+.. rubric:: MỤC TIÊU CUỐI CÙNG
+
 
 Điều quan trọng nhất không phải là giải được 100 bài trong 30 ngày.
 

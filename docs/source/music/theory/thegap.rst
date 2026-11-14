@@ -8,7 +8,7 @@ Tổng hợp Kiến thức về Quãng trong Âm nhạc
 
 Tài liệu này hệ thống hóa toàn bộ lý thuyết nền tảng về quãng (Intervals) trong âm nhạc, từ định nghĩa quãng 5 đúng, cơ sở khoa học vật lý - toán học của việc phân loại quãng, cho đến bản chất và cách cấu tạo của Quãng 2, Quãng 3, Quãng 6 và Quãng 7.
 
-.. _content-map:
+.. _thegap-content-map:
 
 Bản đồ nội dung
 ---------------
@@ -31,7 +31,7 @@ Bản đồ nội dung
 
       Phân tích chi tiết nguồn gốc, cấu trúc số cung, màu sắc cảm xúc và ứng dụng của Quãng 2, Quãng 3, Quãng 6 và Quãng 7.
 
-.. _big-picture:
+.. _thegap-big-picture:
 
 Tổng quan Hệ thống Quãng
 ------------------------
