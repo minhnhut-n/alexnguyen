@@ -106,10 +106,10 @@ lý các bài toán trên ma trận.
 
 Tại sao lại giải brute force trong khi ta biết nó không tối ưu và rất mất thời gian trong 
 việc xác định các trường hợp?
-- BF để viết hàm chuẩn, đơn giản và chắc đúng trong nhiều trường hợp
-- Stress test với thuật toán
-- Hiểu rõ bức tranh toàn cảnh của hệ thống
-- Tránh analysis paralysis (bế tắc)
+* BF để viết hàm chuẩn, đơn giản và chắc đúng trong nhiều trường hợp
+* Stress test với thuật toán
+* Hiểu rõ bức tranh toàn cảnh của hệ thống
+* Tránh analysis paralysis (bế tắc)
 
 **Nội dung**
 
@@ -119,10 +119,12 @@ việc xác định các trường hợp?
 * Tối ưu lời giải ban đầu.
 
 **Bài tập**
+
 Brute force:
-- [e] #1, #728
-- [m] #78, #46
-- [h] #79, #56
+
+* [e] #1, #728
+* [m] #78, #46
+* [h] #79, #56
 
 * `Maximum Subarray #53 <https://leetcode.com/problems/maximum-subarray/>`_
 * `3Sum #15 <https://leetcode.com/problems/3sum/>`_
